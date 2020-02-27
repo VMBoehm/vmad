@@ -38,25 +38,30 @@ class list_put:
     """ 
     put an item into a list
     """
-    ain = {'x': 'ndarray'}
+    ain = {'x': 'ndarray', 'elem': 'ndarray'}
     aout = {'y': 'ndarray'}
 
-    def apl(node, x, item, i):
-        x[i] = item
+    def apl(node, x, elem, i):
         y    = x
+        x[i] = elem
         return dict(y=y)
 
     def vjp(node, _y, x, i):
         deriv    = numpy.ones(len(x))
         deriv[i] = 0.
         _x       = deriv*_y
+        deriv    = numpy.zeros(len(x))
+        deriv[i] = 1.
+        _elem    = numpy.sum(deriv*_y)
         #_x = [d*yy for d, yy in zip(deriv,_y)]
-        return dict(_x=_x)          
+        return dict(_x=_x, _elem=_elem)          
 
-    def jvp(node, x_, x, i):
+    def jvp(node, x_, elem_, x, i):
         deriv    = numpy.ones(len(x))
         deriv[i] = 0
-        y_       = deriv*x_
+        deriv_   = numpy.zeros(len(x))
+        deriv_[i]= 1
+        y_       = deriv*x_+deriv_*elem_
         #y_ = [xx*d for d, xx in zip(deriv,x_)]
         return dict(y_=y_)
 

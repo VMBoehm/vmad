@@ -10,12 +10,15 @@ from vmad.testing import BaseVectorTest
 
 class Test_list_put(BaseVectorTest):
     x     = numpy.array([ii for ii in range(10)])
+    elem  = 500
+    x     = numpy.append(x,elem)
     y     = numpy.array([0,1,500,3,4,5,6,7,8,9])
 
     def model(self, x):
-        elem = 500
         index= 2
-        c    = linalg.list_put(x,elem, index)
+        x1   = linalg.take(x,numpy.arange(10),axis=0)
+        elem = linalg.take(x,10,axis=0)
+        c    = linalg.list_put(x1,elem, index)
         return c
 
 class Test_list_elem(BaseVectorTest):
