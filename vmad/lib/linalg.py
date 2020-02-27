@@ -11,6 +11,58 @@ from vmad.lib.unary import *
 
 from numpy.core.einsumfunc import _parse_einsum_input
 
+
+
+@operator
+class list_elem:
+    """
+    take an item from a list
+    """
+    ain = {'x' : 'ndarray',}
+    aout = {'y' : 'ndarray'}
+
+    def apl(node, x, i):
+        y = numpy.asarray(x[i])
+        return dict(y=y)
+
+    def vjp(node, _y, x,i):
+        _x = numpy.zeros(len(x))
+        _x[i] = 1.
+        return dict(_x=_x)
+        
+    def jvp(node,x_, x, i):
+        return dict(y_=numpy.asarray(x_[i]))
+
+@operator 
+class list_put:
+    """ 
+    put an item into a list
+    """
+    ain = {'x': 'ndarray'}
+    aout = {'y': 'ndarray'}
+
+    def apl(node, x, item, i):
+        x[i] = item
+        y    = x
+        return dict(y=y)
+
+    def vjp(node, _y, x, i):
+        deriv    = numpy.ones(len(x))
+        deriv[i] = 0.
+        _x       = deriv*_y
+        #_x = [d*yy for d, yy in zip(deriv,_y)]
+        return dict(_x=_x)          
+
+    def jvp(node, x_, x, i):
+        deriv    = numpy.ones(len(x))
+        deriv[i] = 0
+        y_       = deriv*x_
+        #y_ = [xx*d for d, xx in zip(deriv,x_)]
+        return dict(y_=y_)
+
+
+
+
 @operator
 class broadcast_to:
     ain = 'x'

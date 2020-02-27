@@ -7,6 +7,27 @@ import numpy
 from vmad import Builder
 from vmad.testing import BaseVectorTest
 
+
+class Test_list_put(BaseVectorTest):
+    x     = numpy.array([ii for ii in range(10)])
+    y     = numpy.array([0,1,500,3,4,5,6,7,8,9])
+
+    def model(self, x):
+        elem = 500
+        index= 2
+        c    = linalg.list_put(x,elem, index)
+        return c
+
+class Test_list_elem(BaseVectorTest):
+    x     = numpy.array([ii for ii in range(10)])
+    y     = numpy.array([2])
+
+    def model(self, x):
+        index = 2
+        c     = linalg.list_elem(x, index)
+        return c
+
+
 class Test_pack_complex(BaseVectorTest):
     x = numpy.arange(10) # will pack to complex of x + x * 1j
     y = numpy.sum(2 * x ** 2)
