@@ -49,11 +49,10 @@ class list_put:
     def vjp(node, _y, x, i):
         deriv    = numpy.ones(len(x))
         deriv[i] = 0.
-        _x       = deriv*_y
+        _x       = numpy.einsum('i,i...->i...',deriv,_y)
         deriv    = numpy.zeros(len(x))
         deriv[i] = 1.
-        _elem    = numpy.sum(deriv*_y)
-        #_x = [d*yy for d, yy in zip(deriv,_y)]
+        _elem    = numpy.einsum('i,i...->...',deriv,_y)
         return dict(_x=_x, _elem=_elem)          
 
     def jvp(node, x_, elem_, x, i):
@@ -61,11 +60,9 @@ class list_put:
         deriv[i] = 0
         deriv_   = numpy.zeros(len(x))
         deriv_[i]= 1
-        y_       = deriv*x_+deriv_*elem_
+        y_       = numpy.einsum('i,i...->i...',deriv,x_)+numpy.einsum('j,i->ji',deriv_,elem_)
         #y_ = [xx*d for d, xx in zip(deriv,x_)]
         return dict(y_=y_)
-
-
 
 
 @operator

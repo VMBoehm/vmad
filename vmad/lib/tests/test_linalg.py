@@ -9,10 +9,11 @@ from vmad.testing import BaseVectorTest
 
 
 class Test_list_put(BaseVectorTest):
-    x     = numpy.array([ii for ii in range(10)])
-    elem  = 500
-    x     = numpy.append(x,elem)
-    y     = numpy.array([0,1,500,3,4,5,6,7,8,9])
+    x     = numpy.array([numpy.arange(2) for ii in range(10)])
+    elem  = numpy.array([[500,500]])
+    y     = numpy.array([numpy.arange(2) for ii in range(10)])
+    y[2]  = elem
+    x     = numpy.concatenate((x,elem), axis=0)
 
     def model(self, x):
         index= 2
