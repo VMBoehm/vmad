@@ -23,8 +23,8 @@ class Test_list_put(BaseVectorTest):
         return c
 
 class Test_list_elem(BaseVectorTest):
-    x     = numpy.array([ii for ii in range(10)])
-    y     = numpy.array([2])
+    x     = numpy.array([numpy.arange(2) for ii in range(10)]) 
+    y     = numpy.array([0,1])
 
     def model(self, x):
         index = 2

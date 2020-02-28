@@ -70,7 +70,6 @@ class BaseScalarTest:
         for x_, y_ in zip(self.x_, self.y_):
             init = dict(x_=x_)
             y_1 = jvp.compute(init=init, vout='y_', return_tape=False)
-
             assert_allclose(y_1, y_, rtol=self.rtol, atol=self.atol)
 
     def test_vjp_finite(self):
@@ -176,7 +175,7 @@ class BaseVectorTest:
             y_1 = jvp.compute(init=init, vout='y_', return_tape=False)
 
             if not self.allclose(y_1, y_):
-                raise AssertionError("jvp comparison failed")
+                raise AssertionError("jvp comparison failed", y_1, y_)
 
     def test_vjp_finite(self):
         vjp = self.tape.get_vjp()

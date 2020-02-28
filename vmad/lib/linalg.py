@@ -26,12 +26,14 @@ class list_elem:
         return dict(y=y)
 
     def vjp(node, _y, x,i):
-        _x = numpy.zeros(len(x))
-        _x[i] = 1.
+        deriv    = numpy.zeros(numpy.shape(x))
+        deriv[i] = numpy.ones(numpy.shape(x)[-1])
+        _x       = deriv*_y
         return dict(_x=_x)
         
     def jvp(node,x_, x, i):
-        return dict(y_=numpy.asarray(x_[i]))
+        y_ = numpy.asarray(x_[i])
+        return dict(y_=y_)
 
 @operator 
 class list_put:
