@@ -45,7 +45,7 @@ class list_put:
 
     def apl(node, x, elem, i):
         y    = x
-        x[i] = elem
+        y[i] = elem
         return dict(y=y)
 
     def vjp(node, _y, x, i):
